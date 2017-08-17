@@ -9,4 +9,4 @@
         Lib.class.getResource("").getPath().replaceFirst("/","").replace("target/classes", "src/main/java").replaceAll("/", "\\\\").replaceAll("%20"," ")+"文件名.dll";
     三、**在dll->api下就是获取dll文件的接口，里面也有dll中的所有方法**
     四、**想看如可使用图片识别的方法使用例子，查看test中的TestDll文件即可**
-    五、**要想知道怎么调用系统的dll就去test中找到JnaTest中查看**
+    五、**要想知道怎么调用系统的dll就去test中找到JnaTest中查看  **
