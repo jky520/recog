@@ -16,13 +16,13 @@ import java.util.Arrays;
 public class RecogImageServiceImpl implements RecogImageService {
 
     @Override
-    public int orc(File f) {
+    public String orc(String filePath) {
         String fileProto = DllUtil.MODEL_BASE_PATH + "deploy.prototxt";
         String lableFile = DllUtil.MODEL_BASE_PATH + "label-map.txt";
         String caffeFile = DllUtil.MODEL_BASE_PATH + "nin_iter_16000.caffemodel";
         CLibrary cLibrary = CLibrary.INSTANCE;
         int hwnd = cLibrary.createClassifier(fileProto, caffeFile, 1, 0, 0, 0, -1);
-        byte[]  file = DllUtil.readFile("D:\\dll\\test.jpg");
+        byte[]  file = DllUtil.readFile(filePath);
         int result = cLibrary.predictSoftmax(hwnd, file, file.length, 1);
         int[] array = new int[cLibrary.getNumOutlayers(result)];
         cLibrary.getMultiLabel(result, array);
@@ -30,6 +30,6 @@ public class RecogImageServiceImpl implements RecogImageService {
         System.out.println(DllUtil.getResult(lableFile,array));
         cLibrary.releaseSoftmaxResult(result);
         cLibrary.releaseClassifier(hwnd);
-        return 0;
+        return DllUtil.getResult(lableFile,array);
     }
 }

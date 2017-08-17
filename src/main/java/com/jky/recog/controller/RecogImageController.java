@@ -39,6 +39,7 @@ public class RecogImageController {
     public String recogImage(HttpServletRequest request, @RequestParam("file") MultipartFile[] files) {
         // 可以获取从页面传来的参数
         String name = request.getParameter("name");
+        String result = null; // 识别结果
         // 支持多文件上传
         if(files != null && files.length >= 1) {
             BufferedOutputStream bos = null;
@@ -47,22 +48,21 @@ public class RecogImageController {
                     String fileName = file.getOriginalFilename();
                     // 判断文件是否是位图片文件
                     if(fileName != null && !"".equalsIgnoreCase(fileName.trim()) && isImageFile(fileName)) {
-                        CommonsMultipartFile cf = (CommonsMultipartFile)file;
-                        //这个myfile是MultipartFile的
-                        DiskFileItem fi = (DiskFileItem) cf.getFileItem();
-                        File f = fi.getStoreLocation();
-                        recogImageService.orc(f);
-                        /**
-                         * 下面是文件上传部分
-                         */
+                       String filePath = uploadPath + "/" + UUID.randomUUID().toString().replaceAll("-","") + getFileType(fileName);
                         // 创建输出对象
-                        //File outFile = new File(uploadPath + "/" + UUID.randomUUID().toString().replaceAll("-","") + getFileType(fileName));
+                        File outFile = new File(filePath);
                         // 拷贝文件到输出文件对象
-                        //FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
+                        FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
+                        // 调用service中的方法orc
+                        result = recogImageService.orc(filePath);
+                        if(outFile.exists()) {
+                            Boolean rs = outFile.delete();
+                            System.out.println("是否删除了？" + rs);
+                        }
                     }
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             } finally {
                 try { // 快捷键 ctrl + alt + t
                     if (bos != null) { bos.close(); }
@@ -71,9 +71,9 @@ public class RecogImageController {
                 }
             }
         } else {
-            System.out.println("文件为空");
+            result = "不是图片";
         }
-        return "hello";
+        return result;
     }
 
     /**

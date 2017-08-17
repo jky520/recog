@@ -8,5 +8,5 @@ import java.io.File;
  */
 public interface RecogImageService {
 
-    public int orc(File file);
+    public String orc(String filPath);
 }
