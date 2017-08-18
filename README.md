@@ -23,3 +23,31 @@
     2、该接口是post请求方式
     3、接口参数名file
     4、返回结果由字母和数字组成
+    
+**代码实例**
+        
+        1、CLibrary接口的部分代码
+        String filePath = DllUtil.LIB_BASE_PATH + "classification_dll.dll";
+        /*
+    	 * 读取相应的dll
+    	 */
+        CLibrary INSTANCE = (CLibrary)
+                Native.loadLibrary(filePath, CLibrary.class);
+        
+        2、service实现类的代码
+        public String orc(String filePath) {
+            String fileProto = DllUtil.MODEL_BASE_PATH  + "deploy.prototxt";
+            String lableFile = DllUtil.MODEL_BASE_PATH  + "label-map.txt";
+            String caffeFile = DllUtil.MODEL_BASE_PATH  + "nin_iter_16000.caffemodel";
+            CLibrary cLibrary = CLibrary.INSTANCE; // 实例化CLibrary接口
+            int hwnd = cLibrary.createClassifier(fileProto, caffeFile, 1, 0, 0, 0, -1);
+            byte[]  file = DllUtil.readFile(filePath);
+            int result = cLibrary.predictSoftmax(hwnd, file, file.length, 1);
+            int[] array = new int[cLibrary.getNumOutlayers(result)];
+            cLibrary.getMultiLabel(result, array);
+            System.out.println(Arrays.toString(array));
+            System.out.println(DllUtil.getResult(lableFile,array));
+            cLibrary.releaseSoftmaxResult(result);
+            cLibrary.releaseClassifier(hwnd);
+            return DllUtil.getResult(lableFile,array);
+        }
