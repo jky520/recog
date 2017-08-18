@@ -10,8 +10,16 @@
         //绝对路径的地址获取，注意要去空格，特别坑，还要把把“/”转换成"\\"，replaceAll("/", "\\\\")
         Lib.class.getResource("").getPath().replaceFirst("/","").replace("target/classes", "src/main/java").replaceAll("/", "\\\\").replaceAll("%20"," ")+"文件名.dll";
         
-    三、在dll->api下就是获取dll文件的接口，里面也有dll中的所有方法
+    三、在dll->api下就是获取dll文件的接口CLibrary，里面也有dll中的所有方法
     
     四、想看如可使用图片识别的方法使用例子，查看test中的TestDll文件即可
     
     五、要想知道怎么调用系统的dll就去test中找到JnaTest中查看
+    
+**接口使用说明**
+
+    该项目是做图片识别，那么要想调用其接口必须遵循接口的规范
+    1、接口暴露地址：http://jky.tunnel.qydev.com/image/recogImage
+    2、该接口是post请求方式
+    3、接口参数名file
+    4、返回结果由字母和数字组成

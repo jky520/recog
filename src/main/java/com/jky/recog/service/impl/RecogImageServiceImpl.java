@@ -17,10 +17,10 @@ public class RecogImageServiceImpl implements RecogImageService {
 
     @Override
     public String orc(String filePath) {
-        String fileProto = DllUtil.MODEL_BASE_PATH + "deploy.prototxt";
-        String lableFile = DllUtil.MODEL_BASE_PATH + "label-map.txt";
-        String caffeFile = DllUtil.MODEL_BASE_PATH + "nin_iter_16000.caffemodel";
-        CLibrary cLibrary = CLibrary.INSTANCE;
+        String fileProto = DllUtil.MODEL_BASE_PATH  + "deploy.prototxt";
+        String lableFile = DllUtil.MODEL_BASE_PATH  + "label-map.txt";
+        String caffeFile = DllUtil.MODEL_BASE_PATH  + "nin_iter_16000.caffemodel";
+        CLibrary cLibrary = CLibrary.INSTANCE; // 实例化CLibrary接口
         int hwnd = cLibrary.createClassifier(fileProto, caffeFile, 1, 0, 0, 0, -1);
         byte[]  file = DllUtil.readFile(filePath);
         int result = cLibrary.predictSoftmax(hwnd, file, file.length, 1);

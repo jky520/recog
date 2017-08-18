@@ -48,12 +48,17 @@ public class RecogImageController {
                     String fileName = file.getOriginalFilename();
                     // 判断文件是否是位图片文件
                     if(fileName != null && !"".equalsIgnoreCase(fileName.trim()) && isImageFile(fileName)) {
-                       String filePath = uploadPath + "/" + UUID.randomUUID().toString().replaceAll("-","") + getFileType(fileName);
+                        // 根据上传文件的临时文件夹判断该文件夹是否存在
+                        File tempDir = new File(uploadPath);
+                        if(!tempDir.exists()) {
+                            tempDir.mkdirs(); // 创建文件夹
+                        }
+                        String filePath = uploadPath + "/" + UUID.randomUUID().toString().replaceAll("-","") + getFileType(fileName);
                         // 创建输出对象
                         File outFile = new File(filePath);
                         // 拷贝文件到输出文件对象
                         FileUtils.copyInputStreamToFile(file.getInputStream(), outFile);
-                        // 调用service中的方法orc
+                        // 调用service中的方法orc进行图片识别
                         result = recogImageService.orc(filePath);
                         if(outFile.exists()) {
                             Boolean rs = outFile.delete();
